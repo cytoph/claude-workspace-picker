@@ -46,7 +46,7 @@ static class ConfigLoader
             LauncherConfig? config = JsonSerializer.Deserialize<LauncherConfig>(json, s_jsonOptions);
 
             if (config is null)
-                return Result.Error<LauncherConfig>("settings.jsonc deserialized to null — check that the root object has a \"directories\" array.");
+                return Result.Error<LauncherConfig>("settings.jsonc deserialized to null - check that the root object has a \"directories\" array.");
 
             return config;
         }

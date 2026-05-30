@@ -86,7 +86,7 @@ sealed class MainScreen : Screen
                 context.Quit();
                 break;
 
-            // Workaround for https://github.com/spectreconsole/spectre.tui/pull/29 —
+            // Workaround for https://github.com/spectreconsole/spectre.tui/pull/29 -
             // TextBoxWidget doesn't pin _horizontalOffset when the cursor retreats from
             // the right edge on deletion. Fix: reset offset by Clear()+Text+MoveToEnd().
             // Remove this case once the PR is merged and the package is updated.

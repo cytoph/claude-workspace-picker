@@ -8,5 +8,5 @@ sealed record ScreenTheme(
     Style TitleStyle,    // fg: titleFg, bg: background, decoration: Bold
     Style BoxStyle,      // fg: boxColor, bg: background
     Style HintStyle,     // fg: hintFg, bg: background
-    Style ScreenStyle    // bg: background only — for ClearWidget
+    Style ScreenStyle    // bg: background only - for ClearWidget
 );

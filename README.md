@@ -1,6 +1,6 @@
 # Claude Workspace Picker
 
-A full-screen terminal UI for picking a workspace and launching [Claude Code](https://claude.ai/code) in it. Run it as a [Windows Terminal](https://github.com/microsoft/terminal) profile — select a directory from your configured list (or enter a custom path), and Claude Code opens there automatically.
+A full-screen terminal UI for picking a workspace and launching [Claude Code](https://claude.ai/code) in it. Run it as a [Windows Terminal](https://github.com/microsoft/terminal) profile - select a directory from your configured list (or enter a custom path), and Claude Code opens there automatically.
 
 ## Installation
 
@@ -12,7 +12,7 @@ Clone the repo and build.
 
 In your Windows Terminal `settings.json`, add a profile under `"profiles"` → `"list"`:
 
-```json
+```jsonc
 {
     "guid": "{00000000-0000-0000-0000-000000000000}", // replace with a generated GUID
     "name": "Claude",
