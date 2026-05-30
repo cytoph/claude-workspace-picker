@@ -1,0 +1,24 @@
+{
+    // Title bar
+    "titleIcon": "🤖",
+    "titleText": "Claude Launcher",
+
+    // Colors (hex strings, or null for terminal default)
+    "boxColor": "#66d3f2",
+    "titleForeground": null, // null = same as boxColor
+    "hintForeground": null, // null = auto-darkened from boxColor
+    "background": null,
+    "foreground": "#ffffff",
+    "selectedBackground": null,
+    "selectedForeground": "#ee20a5",
+    "selectedTextStyle": "bold", // bold · italic · underline · strikethrough · blink · dim · invert - space-separate to combine
+
+    // Directories to show (paths that don't exist on disk are silently skipped)
+    "directories": [
+        {
+            "path": "%USERPROFILE%",
+            "icon": "🏠",
+            "displayName": "Home"
+        }
+    ]
+}
