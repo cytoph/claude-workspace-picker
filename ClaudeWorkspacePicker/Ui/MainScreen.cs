@@ -1,8 +1,8 @@
+using System.Globalization;
 using ClaudeWorkspacePicker.Helpers;
 using ClaudeWorkspacePicker.Models;
 using Spectre.Tui;
 using Spectre.Tui.App;
-using System.Globalization;
 using Color = Spectre.Console.Color;
 using Style = Spectre.Console.Style;
 

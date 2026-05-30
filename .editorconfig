@@ -209,3 +209,11 @@ indent_size = 2
 end_of_line = lf
 [*.{cmd,bat}]
 end_of_line = crlf
+
+###############################################################################
+# Project-specific rules
+###############################################################################
+
+# Specify UTF-8 without byte-order mark for C# files, too
+[*.cs]
+charset = utf-8
