@@ -59,4 +59,3 @@ using Process process = new()
 };
 
 process.Start();
-process.WaitForExit();
