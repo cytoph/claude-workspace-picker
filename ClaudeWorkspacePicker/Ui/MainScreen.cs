@@ -28,12 +28,16 @@ sealed class MainScreen : Screen
     private readonly ClearWidget _customPathBackground;
     private readonly TextBoxWidget _customPathTextBox;
 
+    private readonly string? _globalArguments;
+
     private string _pathError = "";
 
-    public string? SelectedPath { get; private set; }
+    public LaunchTarget? SelectedEntry { get; private set; }
 
     public MainScreen(AppState appState)
     {
+        _globalArguments = appState.GlobalArguments;
+
         ScreenTheme screenTheme = appState.ScreenTheme;
         ListItemTheme listItemTheme = appState.ListItemTheme;
         List<MenuEntry> entries = appState.Entries;
@@ -116,7 +120,10 @@ sealed class MainScreen : Screen
         if (item is null)
             return;
 
-        SelectedPath = item.Entry.ResolvedPath;
+        if (item.Entry.ResolvedPath is not { } path)
+            return;
+
+        SelectedEntry = new LaunchTarget(path, item.Entry.OverrideArguments ?? _globalArguments);
         context.Quit();
     }
 
@@ -130,7 +137,9 @@ sealed class MainScreen : Screen
             return;
         }
 
-        SelectedPath = path;
+        string? overrideArguments = _list.SelectedItem?.Entry.OverrideArguments;
+
+        SelectedEntry = new LaunchTarget(path, overrideArguments ?? _globalArguments);
         context.Quit();
     }
 

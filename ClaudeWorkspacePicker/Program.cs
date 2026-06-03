@@ -44,15 +44,15 @@ MainScreen mainScreen = new(appState);
 
 await Application.Create().RunAsync(mainScreen);
 
-string? selectedPath = mainScreen.SelectedPath;
+if (mainScreen.SelectedEntry is not { } selectedEntry) return;
 
-if (selectedPath is null) return;
+Environment.CurrentDirectory = selectedEntry.Path;
 
-Environment.CurrentDirectory = selectedPath;
+string claudeCommand = string.IsNullOrWhiteSpace(selectedEntry.Arguments) ? "claude" : $"claude {selectedEntry.Arguments}";
 
 using Process process = new()
 {
-    StartInfo = new ProcessStartInfo("cmd.exe", "/c claude")
+    StartInfo = new ProcessStartInfo("cmd.exe", $"/c {claudeCommand}")
     {
         UseShellExecute = false,
     }

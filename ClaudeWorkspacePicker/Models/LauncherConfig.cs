@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ClaudeWorkspacePicker.Models;
 
 sealed record LauncherConfig(
@@ -11,5 +13,6 @@ sealed record LauncherConfig(
     string? SelectedBackground,
     string? SelectedForeground,
     string? SelectedTextStyle,
+    [property: JsonPropertyName("globalArgs")] string? GlobalArguments,
     List<DirectoryEntryConfig>? Directories
 );

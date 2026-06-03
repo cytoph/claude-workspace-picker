@@ -32,7 +32,7 @@ static class ConfigLoader
         ListItemTheme listItemTheme = BuildListItemTheme(config);
         List<MenuEntry> entries = BuildMenuEntries(config);
 
-        return new AppState(screenTheme, listItemTheme, entries);
+        return new AppState(screenTheme, listItemTheme, entries, config.GlobalArguments);
     }
 
     private static Result<LauncherConfig> ReadConfig(string path)
@@ -110,7 +110,7 @@ static class ConfigLoader
 
                 string displayName = dirConfig.DisplayName ?? leafName;
 
-                entries.Add(new MenuEntry(dirConfig.Icon, displayName, resolvedPath));
+                entries.Add(new MenuEntry(dirConfig.Icon, displayName, resolvedPath, OverrideArguments: dirConfig.OverrideArguments));
             }
         }
 
