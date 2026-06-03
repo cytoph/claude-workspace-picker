@@ -1,7 +1,7 @@
 {
     // Title bar
     "titleIcon": "🤖",
-    "titleText": "Claude Launcher",
+    "titleText": "Claude Workspace Picker",
 
     // Colors (hex strings, or null for terminal default)
     "boxColor": "#66d3f2",
