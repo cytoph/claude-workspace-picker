@@ -7,6 +7,12 @@ using Spectre.Tui.App;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
 
+if (args.Contains("--install-profile"))
+{
+    ProfileInstaller.Run();
+    return;
+}
+
 string applicationName = "ClaudeWorkspacePicker";
 string settingsFileName = "settings.jsonc";
 
