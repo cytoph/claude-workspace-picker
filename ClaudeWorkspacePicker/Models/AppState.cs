@@ -1,3 +1,3 @@
 namespace ClaudeWorkspacePicker.Models;
 
-sealed record AppState(ScreenTheme ScreenTheme, ListItemTheme ListItemTheme, List<MenuEntry> Entries, string? GlobalArguments);
+sealed record AppState(ScreenTheme ScreenTheme, ListItemTheme ListItemTheme, List<MenuEntry> Entries, string? GlobalArguments, string SettingsPath);

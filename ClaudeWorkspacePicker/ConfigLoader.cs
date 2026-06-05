@@ -32,7 +32,7 @@ static class ConfigLoader
         ListItemTheme listItemTheme = BuildListItemTheme(config);
         List<MenuEntry> entries = BuildMenuEntries(config);
 
-        return new AppState(screenTheme, listItemTheme, entries, config.GlobalArguments);
+        return new AppState(screenTheme, listItemTheme, entries, config.GlobalArguments, path);
     }
 
     private static Result<LauncherConfig> ReadConfig(string path)

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using ClaudeWorkspacePicker.Helpers;
 using ClaudeWorkspacePicker.Models;
@@ -10,7 +11,7 @@ namespace ClaudeWorkspacePicker.Ui;
 
 sealed class MainScreen : Screen
 {
-    private const string HintsText = "↑↓ navigate \xb7 Enter ✅ \xb7 Esc ❌";
+    private const string HintsText = "⚙️ Ctrl+E";
 
     private const int ListItemPadding = 2;
     private const int BoxLabelPadding = 3;
@@ -29,6 +30,7 @@ sealed class MainScreen : Screen
     private readonly TextBoxWidget _customPathTextBox;
 
     private readonly string? _globalArguments;
+    private readonly string _settingsPath;
 
     private string _pathError = "";
 
@@ -37,6 +39,7 @@ sealed class MainScreen : Screen
     public MainScreen(AppState appState)
     {
         _globalArguments = appState.GlobalArguments;
+        _settingsPath = appState.SettingsPath;
 
         ScreenTheme screenTheme = appState.ScreenTheme;
         ListItemTheme listItemTheme = appState.ListItemTheme;
@@ -75,6 +78,12 @@ sealed class MainScreen : Screen
         if (message is not KeyMessage key)
             return;
 
+        if (key.Modifiers.HasFlag(KeyModifier.Ctrl) && key.Character is 'e' or 'E' or '\x05')
+        {
+            OpenSettingsFile();
+            return;
+        }
+
         bool customSelected = _list.SelectedItem?.Entry.IsCustomPath == true;
 
         switch (key.Key)
@@ -111,6 +120,11 @@ sealed class MainScreen : Screen
                 _pathError = "";
                 break;
         }
+    }
+
+    private void OpenSettingsFile()
+    {
+        Process.Start(new ProcessStartInfo(_settingsPath) { UseShellExecute = true });
     }
 
     private void HandleSelection(ApplicationContext context)
