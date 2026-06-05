@@ -13,6 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MinVer" Version="*" PrivateAssets="all" />
         <PackageReference Include="Spectre.Console" Version="*" />
         <PackageReference Include="Spectre.Tui.App" Version="*" />
     </ItemGroup>
