@@ -5,17 +5,18 @@ namespace ClaudeWorkspacePicker.Models;
 static class Result
 {
     public static Result<T> Success<T>(T value) => new(value);
-    public static Result<T> Error<T>(string errorMessage) => new(errorMessage);
+    public static Result<T> Error<T>(string errorMessage) => new([errorMessage]);
+    public static Result<T> Errors<T>(IReadOnlyList<string> errors) => new(errors);
 }
 
 sealed class Result<T>
 {
     public T? Value { get; }
 
-    public string? ErrorMessage { get; }
+    public IReadOnlyList<string>? Errors { get; }
 
     [MemberNotNullWhen(true, nameof(Value))]
-    [MemberNotNullWhen(false, nameof(ErrorMessage))]
+    [MemberNotNullWhen(false, nameof(Errors))]
     public bool IsSuccess { get; }
 
     public Result(T value)
@@ -24,12 +25,14 @@ sealed class Result<T>
         IsSuccess = true;
     }
 
-    public Result(string errorMessage)
+    public Result(IReadOnlyList<string> errors)
     {
-        ErrorMessage = errorMessage;
+        Errors = errors;
         IsSuccess = false;
     }
 
+    [MemberNotNullWhen(true, nameof(Value))]
+    [MemberNotNullWhen(false, nameof(Errors))]
     public bool TryGetValue([NotNullWhen(true)] out T? value)
     {
         value = Value;

@@ -40,15 +40,17 @@ else
 
 Result<AppState> result = ConfigLoader.Load(settingsPath);
 
+Application application = Application.Create();
+
 if (!result.TryGetValue(out AppState? appState))
 {
-    Console.WriteLine($"Configuration Error: {result.ErrorMessage}");
+    await application.RunAsync(new ErrorScreen(result.Errors, settingsPath));
     return;
 }
 
 MainScreen mainScreen = new(appState);
 
-await Application.Create().RunAsync(mainScreen);
+await application.RunAsync(mainScreen);
 
 if (mainScreen.SelectedEntry is not { } selectedEntry) return;
 
