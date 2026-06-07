@@ -11,7 +11,7 @@
     "foreground": "#ffffff",
     "selectedBackground": null,
     "selectedForeground": "#ee20a5",
-    "selectedTextStyle": "bold", // bold · italic · underline · strikethrough · blink · dim · invert - space-separate to combine
+    "selectedTextStyle": "bold", // bold · dim · italic · underline · invert · conceal · slowBlink · rapidBlink · strikethrough - space-separate to combine
 
     // Arguments appended as-is to the `claude` command on launch (e.g. "--dangerously-skip-permissions")
     "globalArgs": "",

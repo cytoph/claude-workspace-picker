@@ -104,7 +104,7 @@ static class ConfigLoader
 
         foreach (string part in textStyle.Split(' ', StringSplitOptions.RemoveEmptyEntries))
         {
-            if (!TryParseDecorationPart(part, out Decoration d))
+            if (!Enum.TryParse(part, ignoreCase: true, out Decoration d))
             {
                 errors.Add($"Unknown style token in 'selectedTextStyle': \"{part}\".");
 
@@ -164,22 +164,4 @@ static class ConfigLoader
         return entries;
     }
 
-    private static bool TryParseDecorationPart(string part, out Decoration decoration)
-    {
-        Decoration? result = part.ToLowerInvariant() switch
-        {
-            "bold" => Decoration.Bold,
-            "italic" => Decoration.Italic,
-            "underline" => Decoration.Underline,
-            "strikethrough" => Decoration.Strikethrough,
-            "blink" => Decoration.SlowBlink,
-            "dim" => Decoration.Dim,
-            "invert" => Decoration.Invert,
-            _ => null,
-        };
-
-        decoration = result ?? default;
-
-        return result.HasValue;
-    }
 }
