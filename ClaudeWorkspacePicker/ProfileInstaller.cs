@@ -35,7 +35,11 @@ internal static partial class ProfileInstaller
         try
         {
             string text = File.ReadAllText(settingsPath);
-            JsonNode? root = JsonNode.Parse(text);
+            JsonNode? root = JsonNode.Parse(text, documentOptions: new JsonDocumentOptions
+            {
+                CommentHandling = JsonCommentHandling.Skip,
+                AllowTrailingCommas = true,
+            });
 
             if (root?["profiles"]?["list"] is not JsonArray profileList)
             {
