@@ -75,7 +75,7 @@ All top-level options are optional. Omitted or `null` values fall back to the de
 | `hintForeground` | darkened from `boxColor` | Hint text color (hex) |
 | `selectedBackground` | same as `background` | Selected item background (hex) |
 | `selectedForeground` | same as `foreground` | Selected item text color (hex) |
-| `selectedTextStyle` | `"bold"` | Decoration for the selected item: `bold`, `italic`, `underline`, etc. Space-separate to combine |
+| `selectedTextStyle` | `"bold"` | Decoration for the selected item; space-separate to combine multiple values, e.g. `"bold italic"`; see valid values below |
 | `globalArgs` | `""` | Arguments appended to every `claude` invocation, e.g. `"--dangerously-skip-permissions"` |
 
 **Directory entries**
@@ -88,3 +88,18 @@ All top-level options are optional. Omitted or `null` values fall back to the de
 | `overrideArgs` | no | Replaces `globalArgs` for this entry; `""` to pass no arguments |
 
 Paths that do not exist on disk are reported as configuration errors on launch.
+
+**`TextStyle` values**
+
+| Value | Effect |
+|---|---|
+| `bold` | Bold text |
+| `dim` | Dimmed text |
+| `italic` | Italic text |
+| `underline` | Underlined text |
+| `invert` | Swap foreground and background |
+| `conceal` | Hidden text |
+| `slowBlink` | Slowly blinking text |
+| `rapidBlink` | Rapidly blinking text |
+| `strikethrough` | Strikethrough text |
+| `none` or `""` | No decoration |
