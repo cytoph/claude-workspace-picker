@@ -21,13 +21,13 @@ string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialF
 
 string settingsPath;
 
-if (File.Exists(appDataPath))
-{
-    settingsPath = appDataPath;
-}
-else if (File.Exists(localPath))
+if (File.Exists(localPath))
 {
     settingsPath = localPath;
+}
+else if (File.Exists(appDataPath))
+{
+    settingsPath = appDataPath;
 }
 else
 {
