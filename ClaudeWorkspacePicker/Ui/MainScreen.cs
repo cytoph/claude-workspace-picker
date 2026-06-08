@@ -164,10 +164,14 @@ sealed class MainScreen : AppScreen
 
     private static TextBoxWidget BuildCustomPathTextBox(ListItemTheme listItemTheme)
     {
+        Style selectedStyle = listItemTheme.SelectedStyle;
+        Style hintStyle = selectedStyle with { Foreground = selectedStyle.Foreground.Blend(Color.White, 0.5f) };
+
         TextBoxWidget box = new TextBoxWidget()
             .AsSingleLine()
             .Placeholder("e.g. C:\\Projects\\myapp or %USERPROFILE%")
-            .Style(listItemTheme.SelectedStyle);
+            .PlaceholderStyle(hintStyle)
+            .Style(selectedStyle);
 
         box.IsFocused = true;
 
