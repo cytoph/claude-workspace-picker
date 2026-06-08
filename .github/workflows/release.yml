@@ -32,8 +32,8 @@ jobs:
       - name: Create and push tag
         if: github.event_name == 'workflow_dispatch' && inputs.tag != ''
         run: |
-          git tag ${{ inputs.tag }}
-          git push origin ${{ inputs.tag }}
+          git tag "${{ inputs.tag }}"
+          git push origin "${{ inputs.tag }}"
 
       - name: Build artifact
         run: dotnet publish ClaudeWorkspacePicker/ClaudeWorkspacePicker.csproj -r win-x64 --self-contained -p:PublishSingleFile=true -c Release
