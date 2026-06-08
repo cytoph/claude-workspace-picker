@@ -1,29 +1,9 @@
 {
-    // Title bar
-    "titleIcon": "🤖",
-    "titleText": "Claude Workspace Picker",
-
-    // Colors (hex strings, or null for terminal default)
-    "boxColor": "#66d3f2",
-    "titleForeground": null, // null = same as boxColor
-    "hintForeground": null, // null = auto-darkened from boxColor
-    "background": null,
-    "foreground": "#ffffff",
-    "selectedBackground": null,
-    "selectedForeground": "#ee20a5",
-    "selectedTextStyle": "bold", // bold · dim · italic · underline · invert · conceal · slowBlink · rapidBlink · strikethrough - space-separate to combine
-
-    // Arguments appended as-is to the `claude` command on launch (e.g. "--dangerously-skip-permissions")
-    "globalArgs": "",
-
-    // Directories to show (paths that don't exist on disk are silently skipped)
     "directories": [
         {
             "path": "%USERPROFILE%",
             "icon": "🏠",
-            "displayName": "Home",
-            // Uncomment to replace globalArgs for this directory (empty string = no extra flags):
-            // "overrideArgs": "--dangerously-skip-permissions"
+            "displayName": "Home"
         }
     ]
 }
