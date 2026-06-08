@@ -7,8 +7,8 @@ namespace ClaudeWorkspacePicker;
 static class ConfigLoader
 {
     private const string DefaultTitleIcon = "\U0001f916";
-    private const string DefaultTitleText = "Claude Launcher";
-    private const string DefaultBoxColor = "#0037da";
+    private const string DefaultTitleText = "Claude Workspace Picker";
+    private const string DefaultBoxColor = "#d77757";
     private static readonly Color s_defaultBoxColor = Color.FromHex(DefaultBoxColor);
     private static readonly Decoration s_defaultSelectedDecoration = Decoration.Bold;
 
@@ -28,13 +28,13 @@ static class ConfigLoader
 
         List<string> errors = [];
 
+        Color background = ParseHexOrDefault(config.Background, "background", Color.Default, errors);
+        Color foreground = ParseHexOrDefault(config.Foreground, "foreground", Color.Default, errors);
         Color boxColor = ParseHexOrDefault(config.BoxColor, "boxColor", s_defaultBoxColor, errors);
         Color titleForeground = ParseHexOrDefault(config.TitleForeground, "titleForeground", boxColor, errors);
         Color hintForeground = ParseHexOrDefault(config.HintForeground, "hintForeground", boxColor.Blend(Color.Black, 0.4f), errors);
-        Color background = ParseHexOrDefault(config.Background, "background", Color.Default, errors);
-        Color foreground = ParseHexOrDefault(config.Foreground, "foreground", Color.Default, errors);
-        Color selectedForeground = ParseHexOrDefault(config.SelectedForeground, "selectedForeground", Color.Default, errors);
-        Color selectedBackground = ParseHexOrDefault(config.SelectedBackground, "selectedBackground", Color.Default, errors);
+        Color selectedBackground = ParseHexOrDefault(config.SelectedBackground, "selectedBackground", background, errors);
+        Color selectedForeground = ParseHexOrDefault(config.SelectedForeground, "selectedForeground", foreground, errors);
         Decoration selectedDecoration = ParseDecorationOrDefault(config.SelectedTextStyle, s_defaultSelectedDecoration, errors);
 
         List<MenuEntry> entries = BuildMenuEntries(config, errors);
