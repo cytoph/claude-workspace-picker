@@ -4,31 +4,34 @@
 
 ![Screenshot](Assets/screenshot.png)
 
-## Download
+## Get started
 
-Grab the latest `ClaudeWorkspacePicker.exe` from [Releases](https://github.com/cytoph/claude-workspace-picker/releases/latest) and place it anywhere, e.g. `%LOCALAPPDATA%\ClaudeWorkspacePicker\`.
+### One-liner install (recommended)
 
-## Installation
+Paste this into PowerShell:
 
-Run with `--install-profile` to add a Windows Terminal profile automatically:
-
-```
-ClaudeWorkspacePicker.exe --install-profile
+```powershell
+irm https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.ps1 | iex
 ```
 
-Re-run at any time to update the path if you move the exe.
+This downloads the latest exe to `%LOCALAPPDATA%\ClaudeWorkspacePicker\`, writes a starter `settings.jsonc` if one does not exist yet, and adds a Windows Terminal profile. Re-run at any time to update.
 
-Or add the profile manually in your Windows Terminal `settings.json`:
+### Manual install
 
-```jsonc
-{
-    "commandline": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
-    "guid": "{00000000-0000-0000-0000-000000000000}", // replace with a generated GUID
-    "hidden": false,
-    "icon": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
-    "name": "Claude Workspace Picker"
-}
-```
+1. Download `ClaudeWorkspacePicker.exe` from [Releases](https://github.com/cytoph/claude-workspace-picker/releases/latest) and place it anywhere, e.g. `%LOCALAPPDATA%\ClaudeWorkspacePicker\`.
+2. Run `ClaudeWorkspacePicker.exe --install-profile` to add a Windows Terminal profile automatically. Re-run at any time to update the path if you move the exe.
+
+   Or add the profile manually in your Windows Terminal `settings.json`:
+
+   ```jsonc
+   {
+       "commandline": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
+       "guid": "{00000000-0000-0000-0000-000000000000}", // replace with a generated GUID
+       "hidden": false,
+       "icon": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
+       "name": "Claude Workspace Picker"
+   }
+   ```
 
 ## Settings
 
