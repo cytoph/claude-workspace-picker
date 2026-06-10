@@ -32,10 +32,10 @@ static class ConfigLoader
         Color foreground = ParseHexOrDefault(config.Foreground, "foreground", Color.Default, errors);
         Color boxColor = ParseHexOrDefault(config.BoxColor, "boxColor", s_defaultBoxColor, errors);
         Color titleForeground = ParseHexOrDefault(config.TitleForeground, "titleForeground", boxColor, errors);
-        Color hintForeground = ParseHexOrDefault(config.HintForeground, "hintForeground", boxColor.Blend(Color.Black, 0.4f), errors);
+        Color hintForeground = ParseHexOrDefault(config.HintForeground, "hintForeground", boxColor, errors);
         Color selectedBackground = ParseHexOrDefault(config.SelectedBackground, "selectedBackground", background, errors);
         Color selectedForeground = ParseHexOrDefault(config.SelectedForeground, "selectedForeground", foreground, errors);
-        Decoration selectedDecoration = ParseDecorationOrDefault(config.SelectedTextStyle, s_defaultSelectedDecoration, errors);
+        Decoration selectedDecoration = ParseDecorationOrDefault(config.SelectedTextStyle, "selectedTextStyle", s_defaultSelectedDecoration, errors);
 
         List<MenuEntry> entries = BuildMenuEntries(config, errors);
 
@@ -47,7 +47,7 @@ static class ConfigLoader
             TitleText: config.TitleText ?? DefaultTitleText,
             TitleStyle: new Style(foreground: titleForeground, background: background, decoration: Decoration.Bold),
             BoxStyle: new Style(foreground: boxColor, background: background),
-            HintStyle: new Style(foreground: hintForeground, background: background),
+            HintStyle: new Style(foreground: hintForeground, background: background, decoration: config.HintForeground is null ? Decoration.Dim : null),
             ScreenStyle: new Style(background: background)
         );
 
@@ -95,7 +95,7 @@ static class ConfigLoader
         return color;
     }
 
-    private static Decoration ParseDecorationOrDefault(string? textStyle, Decoration fallback, List<string> errors)
+    private static Decoration ParseDecorationOrDefault(string? textStyle, string fieldName, Decoration fallback, List<string> errors)
     {
         if (textStyle is null)
             return fallback;
@@ -106,7 +106,7 @@ static class ConfigLoader
         {
             if (!Enum.TryParse(part, ignoreCase: true, out Decoration d))
             {
-                errors.Add($"Unknown style token in 'selectedTextStyle': \"{part}\".");
+                errors.Add($"Unknown style token in '{fieldName}': \"{part}\".");
 
                 continue;
             }

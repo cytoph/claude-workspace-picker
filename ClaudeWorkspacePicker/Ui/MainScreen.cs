@@ -4,6 +4,7 @@ using ClaudeWorkspacePicker.Models;
 using Spectre.Tui;
 using Spectre.Tui.App;
 using Color = Spectre.Console.Color;
+using Decoration = Spectre.Console.Decoration;
 using Style = Spectre.Console.Style;
 
 namespace ClaudeWorkspacePicker.Ui;
@@ -165,7 +166,7 @@ sealed class MainScreen : AppScreen
     private static TextBoxWidget BuildCustomPathTextBox(ListItemTheme listItemTheme)
     {
         Style selectedStyle = listItemTheme.SelectedStyle;
-        Style hintStyle = selectedStyle with { Foreground = selectedStyle.Foreground.Blend(Color.White, 0.5f) };
+        Style hintStyle = selectedStyle with { Decoration = selectedStyle.Decoration | Decoration.Dim };
 
         TextBoxWidget box = new TextBoxWidget()
             .AsSingleLine()
