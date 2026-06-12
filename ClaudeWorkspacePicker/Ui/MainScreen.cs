@@ -130,7 +130,7 @@ sealed class MainScreen : AppScreen
 
     private void ConfirmCustomPath(ApplicationContext context)
     {
-        string path = Environment.ExpandEnvironmentVariables(_customPathTextBox.Text).Trim();
+        string path = PathHelper.ExpandPath(_customPathTextBox.Text).Trim();
 
         if (!Directory.Exists(path))
         {
@@ -168,9 +168,13 @@ sealed class MainScreen : AppScreen
         Style selectedStyle = listItemTheme.SelectedStyle;
         Style hintStyle = selectedStyle with { Decoration = selectedStyle.Decoration | Decoration.Dim };
 
+        string placeholderText = OperatingSystem.IsWindows()
+            ? "e.g. C:\\Projects\\myapp or %USERPROFILE%"
+            : "e.g. ~/projects/myapp or /home/user/projects";
+
         TextBoxWidget box = new TextBoxWidget()
             .AsSingleLine()
-            .Placeholder("e.g. C:\\Projects\\myapp or %USERPROFILE%")
+            .Placeholder(placeholderText)
             .PlaceholderStyle(hintStyle)
             .Style(selectedStyle);
 

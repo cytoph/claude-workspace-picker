@@ -7,8 +7,10 @@ Write-Host 'Installing Claude Workspace Picker...'
 try {
     # Step 1 - resolve latest release
     $release = Invoke-RestMethod 'https://api.github.com/repos/cytoph/claude-workspace-picker/releases/latest'
-    $exeAsset = $release.assets | Where-Object { $_.name -eq 'ClaudeWorkspacePicker.exe' }
-    if (-not $exeAsset) { throw "No ClaudeWorkspacePicker.exe asset found in release $($release.tag_name)" }
+    $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_ARCHITEW6432 -eq 'ARM64') { 'arm64' } else { 'x64' }
+    $assetName = "ClaudeWorkspacePicker-win-$arch.exe"
+    $exeAsset = $release.assets | Where-Object { $_.name -eq $assetName }
+    if (-not $exeAsset) { throw "No $assetName asset found in release $($release.tag_name)" }
     $exeUrl = $exeAsset.browser_download_url
     $tag = $release.tag_name
     $settingsUrl = "https://raw.githubusercontent.com/cytoph/claude-workspace-picker/$tag/ClaudeWorkspacePicker/settings.jsonc"

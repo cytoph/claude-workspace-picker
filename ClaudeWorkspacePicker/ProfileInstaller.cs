@@ -23,6 +23,13 @@ internal static partial class ProfileInstaller
 
     public static void Run()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Console.WriteLine("--install-profile is only supported on Windows.");
+
+            return;
+        }
+
         string? settingsPath = FindSettingsPath();
 
         if (settingsPath is null)

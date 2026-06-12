@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "ClaudeWorkspacePicker": {
+      "commandName": "Project"
+    },
+    "WSL": {
+      "commandName": "WSL2",
+      "distributionName": "Ubuntu"
+    },
+    "WSL (Exec)": {
+      "commandName": "Executable",
+      "executablePath": "wsl",
+      "commandLineArgs": "dotnet ClaudeWorkspacePicker.dll [commandLineArgs]"
+    }
+  }
+}
