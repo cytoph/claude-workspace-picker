@@ -27,7 +27,7 @@ try {
 
     # Step 3 - download exe (always overwrite - this is how updates work)
     $exePath = Join-Path $installDir 'ClaudeWorkspacePicker.exe'
-    Write-Host '  [3/5] Downloading ClaudeWorkspacePicker.exe...' -NoNewline
+    Write-Host "  [3/5] Downloading $assetName..." -NoNewline
     Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
     Write-Host ' done.'
 
