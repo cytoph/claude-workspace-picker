@@ -57,21 +57,13 @@ else
     echo '  [4/5] settings.jsonc already exists - skipped'
 fi
 
-# Step 5 - create symlink in ~/.local/bin if the directory exists
+# Step 5 - create symlink in ~/.local/bin
 # (Windows Terminal profile installation is Windows-only - not applicable here)
 symlink_path="$HOME/.local/bin/ClaudeWorkspacePicker"
-if [ -d "$HOME/.local/bin" ]; then
-    ln -sf "$binary_path" "$symlink_path"
-    echo "  [5/5] Symlink created at $symlink_path"
-else
-    echo '  [5/5] Skipped symlink (~/.local/bin not found)'
-fi
+mkdir -p "$HOME/.local/bin"
+ln -sf "$binary_path" "$symlink_path"
+echo "  [5/5] Symlink created at $symlink_path"
 
 echo ''
 echo "Done. ClaudeWorkspacePicker installed to $install_dir"
 echo "Edit settings: $install_dir/settings.jsonc"
-if [ ! -d "$HOME/.local/bin" ]; then
-    echo ''
-    echo 'To use by name, add to your PATH:'
-    echo "  export PATH=\"\$HOME/.local/share/ClaudeWorkspacePicker:\$PATH\""
-fi
