@@ -21,9 +21,18 @@ string settingsPath = Path.Combine(AppContext.BaseDirectory, SettingsFileName);
 
 if (!File.Exists(settingsPath))
 {
+    Stream? embeddedSettings = typeof(Program).Assembly.GetManifestResourceStream($"{ApplicationName}.{SettingsFileName}");
+
+    if (embeddedSettings is null)
+    {
+        Console.Error.WriteLine("Internal error: embedded settings.jsonc resource not found.");
+
+        return;
+    }
+
     try
     {
-        using Stream src = typeof(Program).Assembly.GetManifestResourceStream($"{ApplicationName}.{SettingsFileName}")!;
+        using Stream src = embeddedSettings;
         using FileStream dst = File.Create(settingsPath);
         await src.CopyToAsync(dst);
     }
