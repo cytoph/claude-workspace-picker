@@ -10,8 +10,8 @@ To install Claude Workspace Picker, use one of the following methods. Re-run at 
 
 **Linux / macOS:**
 
-```sh
-curl -fsSL https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.sh | sh
+```bash
+curl -fsSL https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.sh | bash
 ```
 
 Installs to `~/.local/share/ClaudeWorkspacePicker/` and symlinks the binary into `~/.local/bin/` if that directory exists.
