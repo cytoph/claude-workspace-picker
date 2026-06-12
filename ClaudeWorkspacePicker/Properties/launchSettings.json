@@ -10,7 +10,7 @@
     "WSL (Exec)": {
       "commandName": "Executable",
       "executablePath": "wsl",
-      "commandLineArgs": "dotnet ClaudeWorkspacePicker.dll [commandLineArgs]"
+      "commandLineArgs": "dotnet ClaudeWorkspacePicker.dll"
     }
   }
 }
