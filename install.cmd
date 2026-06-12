@@ -53,10 +53,34 @@ if not exist "%SETTINGS_PATH%" (
     echo   [4/5] settings.jsonc already exists - skipped
 )
 
-:: Step 5 - install Windows Terminal profile
-"%EXE_PATH%" --install-profile
-echo   [5/5] Windows Terminal profile installed
+:: Step 5 - optionally install Windows Terminal profile
+set WT_FOUND=0
+if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" set WT_FOUND=1
+if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json" set WT_FOUND=1
+if exist "%LOCALAPPDATA%\Microsoft\Windows Terminal\settings.json" set WT_FOUND=1
+
+set PROFILE_INSTALLED=0
+if "%WT_FOUND%"=="1" (
+    set /p INSTALL_PROFILE=  [5/5] Windows Terminal found. Install launcher profile? [Y/n]:
+    if "!INSTALL_PROFILE!"=="" set INSTALL_PROFILE=Y
+    if /i "!INSTALL_PROFILE!"=="Y" (
+        "%EXE_PATH%" --install-profile
+        if !ERRORLEVEL!==0 (
+            set PROFILE_INSTALLED=1
+        ) else (
+            echo   [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.
+        )
+    ) else (
+        echo   [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.
+    )
+) else (
+    echo   [5/5] Windows Terminal not found - skipped. Run ClaudeWorkspacePicker.exe --install-profile after installing Windows Terminal.
+)
 
 echo.
-echo Done. Open Windows Terminal and select "Claude Workspace Picker" to get started.
+if "%PROFILE_INSTALLED%"=="1" (
+    echo Done. Open Windows Terminal and select "Claude Workspace Picker" to get started.
+) else (
+    echo Done.
+)
 endlocal

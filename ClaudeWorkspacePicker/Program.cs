@@ -9,9 +9,9 @@ Console.InputEncoding = System.Text.Encoding.UTF8;
 
 if (args.Contains("--install-profile"))
 {
-    ProfileInstaller.Run();
+    bool success = ProfileInstaller.Run();
 
-    return;
+    Environment.Exit(success ? 0 : 1);
 }
 
 const string ApplicationName = "ClaudeWorkspacePicker";
