@@ -1,43 +1,60 @@
 # Claude Workspace Picker
 
-**Claude Workspace Picker** is a full-screen terminal UI for picking a workspace and launching [Claude Code](https://claude.ai/code) in it. Configure a list of project directories, select one, and Claude Code opens there immediately. Works best as a [Windows Terminal](https://github.com/microsoft/terminal) profile.
+**Claude Workspace Picker** is a full-screen terminal UI for picking a workspace and launching [Claude Code](https://claude.ai/code) in it. Configure a list of project directories, select one, and Claude Code opens there immediately. Runs on Linux, macOS, and Windows. Works best as a [Windows Terminal](https://github.com/microsoft/terminal) profile on Windows.
 
 ![Screenshot](Assets/screenshot.png)
 
 ## Get started
 
-### One-liner install (recommended)
+To install Claude Workspace Picker, use one of the following methods. Re-run at any time to update.
 
-Paste this into PowerShell:
+**Linux / macOS:**
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.sh | sh
+```
+
+Installs to `~/.local/share/ClaudeWorkspacePicker/` and symlinks the binary into `~/.local/bin/` if that directory exists.
+
+**Windows PowerShell:**
 
 ```powershell
 irm https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.ps1 | iex
 ```
 
-This downloads the latest exe to `%LOCALAPPDATA%\ClaudeWorkspacePicker\`, writes a starter `settings.jsonc` if one does not exist yet, and adds a Windows Terminal profile. Re-run at any time to update.
+Installs to `%LOCALAPPDATA%\ClaudeWorkspacePicker\`.
+
+**Windows CMD:**
+
+```cmd
+curl -fsSL https://raw.githubusercontent.com/cytoph/claude-workspace-picker/main/install.cmd -o install.cmd && install.cmd && del install.cmd
+```
+
+Installs to `%LOCALAPPDATA%\ClaudeWorkspacePicker\`.
 
 ### Manual install
 
-1. Download `ClaudeWorkspacePicker.exe` from [Releases](https://github.com/cytoph/claude-workspace-picker/releases/latest) and place it anywhere, e.g. `%LOCALAPPDATA%\ClaudeWorkspacePicker\`.
-2. Run `ClaudeWorkspacePicker.exe --install-profile` to add a Windows Terminal profile automatically. Re-run at any time to update the path if you move the exe.
+Download the binary for your platform from [Releases](https://github.com/cytoph/claude-workspace-picker/releases/latest) and place it anywhere.
 
-   Or add the profile manually in your Windows Terminal `settings.json`:
+### Windows Terminal profile
 
-   ```jsonc
-   {
-       "commandline": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
-       "guid": "{00000000-0000-0000-0000-000000000000}", // replace with a generated GUID
-       "hidden": false,
-       "icon": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
-       "name": "Claude Workspace Picker"
-   }
-   ```
+To add a Windows Terminal profile for Claude Workspace Picker, run `ClaudeWorkspacePicker.exe --install-profile`. Re-run at any time to update the path if you move the exe. The one-liner installers above also offer this interactively if Windows Terminal is found.
+
+Or add the profile manually in your Windows Terminal `settings.json`:
+
+```jsonc
+{
+    "commandline": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
+    "guid": "{00000000-0000-0000-0000-000000000000}", // replace with a generated GUID
+    "hidden": false,
+    "icon": "C:\\path\\to\\ClaudeWorkspacePicker.exe",
+    "name": "Claude Workspace Picker"
+}
+```
 
 ## Settings
 
-On first launch, a starter `settings.jsonc` is created at `%LOCALAPPDATA%\ClaudeWorkspacePicker\settings.jsonc`. Press `Ctrl+E` inside the picker to open it directly.
-
-You can also place a `settings.jsonc` in the same folder as the exe - it takes priority over `%LOCALAPPDATA%`, making it a portable installation.
+On first launch, a starter `settings.jsonc` is written next to the binary. Press `Ctrl+E` inside the picker to open it directly.
 
 ```jsonc
 {
@@ -54,7 +71,7 @@ You can also place a `settings.jsonc` in the same folder as the exe - it takes p
     "globalArgs": "",
     "directories": [
         {
-            "path": "%USERPROFILE%",
+            "path": "~",
             "icon": "🏠",
             "displayName": "Home",
             "overrideArgs": "--dangerously-skip-permissions"
@@ -85,7 +102,7 @@ All top-level options are optional. Omitted or `null` values fall back to the de
 
 | Option | Required | Description |
 |---|---|---|
-| `path` | yes | Directory path; `%ENV_VAR%` expansion supported |
+| `path` | yes | Directory path; `~` and `%ENV_VAR%` expansion supported |
 | `icon` | yes | Icon shown next to the entry |
 | `displayName` | no | Label shown in the list; defaults to the folder name |
 | `overrideArgs` | no | Replaces `globalArgs` for this entry; `""` to pass no arguments |
