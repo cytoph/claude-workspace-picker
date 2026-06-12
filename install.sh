@@ -43,9 +43,10 @@ echo "  [2/5] Install directory: $install_dir"
 asset_name="ClaudeWorkspacePicker-${os}-${arch}"
 asset_url="https://github.com/cytoph/claude-workspace-picker/releases/download/${tag}/${asset_name}"
 binary_path="$install_dir/ClaudeWorkspacePicker"
-echo "  [3/5] Downloading $asset_name..."
+printf '  [3/5] Downloading %s...' "$asset_name"
 curl -fsSL "$asset_url" -o "$binary_path"
 chmod +x "$binary_path"
+echo ' done.'
 
 # Step 4 - write starter settings.jsonc if absent
 settings_path="$install_dir/settings.jsonc"

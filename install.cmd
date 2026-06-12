@@ -32,12 +32,14 @@ if not exist "%INSTALL_DIR%" (
 set EXE_NAME=ClaudeWorkspacePicker-win-%ARCH%.exe
 set EXE_URL=https://github.com/cytoph/claude-workspace-picker/releases/download/%TAG%/%EXE_NAME%
 set EXE_PATH=%INSTALL_DIR%\ClaudeWorkspacePicker.exe
-echo   [3/5] Downloading %EXE_NAME%...
+<nul set /p DUMMY=  [3/5] Downloading %EXE_NAME%...
 curl -fsSL "%EXE_URL%" -o "%EXE_PATH%"
 if %ERRORLEVEL% neq 0 (
+    echo.
     echo Error: Failed to download %EXE_NAME%.
     exit /b 1
 )
+echo  done.
 
 :: Step 4 - write starter settings.jsonc only if absent
 set SETTINGS_PATH=%INSTALL_DIR%\settings.jsonc
