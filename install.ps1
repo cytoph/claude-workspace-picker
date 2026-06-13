@@ -7,8 +7,10 @@ Write-Host 'Installing Claude Workspace Picker...'
 try {
     # Step 1 - resolve latest release
     $release = Invoke-RestMethod 'https://api.github.com/repos/cytoph/claude-workspace-picker/releases/latest'
-    $exeAsset = $release.assets | Where-Object { $_.name -eq 'ClaudeWorkspacePicker.exe' }
-    if (-not $exeAsset) { throw "No ClaudeWorkspacePicker.exe asset found in release $($release.tag_name)" }
+    $arch = if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64' -or $env:PROCESSOR_ARCHITEW6432 -eq 'ARM64') { 'arm64' } else { 'x64' }
+    $assetName = "ClaudeWorkspacePicker-win-$arch.exe"
+    $exeAsset = $release.assets | Where-Object { $_.name -eq $assetName }
+    if (-not $exeAsset) { throw "No $assetName asset found in release $($release.tag_name)" }
     $exeUrl = $exeAsset.browser_download_url
     $tag = $release.tag_name
     $settingsUrl = "https://raw.githubusercontent.com/cytoph/claude-workspace-picker/$tag/ClaudeWorkspacePicker/settings.jsonc"
@@ -25,7 +27,7 @@ try {
 
     # Step 3 - download exe (always overwrite - this is how updates work)
     $exePath = Join-Path $installDir 'ClaudeWorkspacePicker.exe'
-    Write-Host '  [3/5] Downloading ClaudeWorkspacePicker.exe...' -NoNewline
+    Write-Host "  [3/5] Downloading $assetName..." -NoNewline
     Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
     Write-Host ' done.'
 
@@ -38,12 +40,37 @@ try {
         Write-Host '  [4/5] settings.jsonc already exists - skipped'
     }
 
-    # Step 5 - install Windows Terminal profile
-    & $exePath --install-profile
-    Write-Host '  [5/5] Windows Terminal profile installed'
+    # Step 5 - optionally install Windows Terminal profile
+    $wtPaths = @(
+        "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json",
+        "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json",
+        "$env:LOCALAPPDATA\Microsoft\Windows Terminal\settings.json"
+    )
+    $wtFound = ($wtPaths | Where-Object { Test-Path $_ }).Count -gt 0
+    $profileInstalled = $false
+
+    if ($wtFound) {
+        $response = Read-Host '  [5/5] Windows Terminal found. Install launcher profile? [Y/n]'
+        if ($response -eq '' -or $response -match '^[Yy]') {
+            & $exePath --install-profile
+            if ($LASTEXITCODE -eq 0) {
+                $profileInstalled = $true
+            } else {
+                Write-Host '  [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.' -ForegroundColor Yellow
+            }
+        } else {
+            Write-Host '  [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.'
+        }
+    } else {
+        Write-Host '  [5/5] Windows Terminal not found - skipped. Run ClaudeWorkspacePicker.exe --install-profile after installing Windows Terminal.'
+    }
 
     Write-Host ''
-    Write-Host 'Done. Open Windows Terminal and select "Claude Workspace Picker" to get started.'
+    if ($profileInstalled) {
+        Write-Host 'Done. Open Windows Terminal and select "Claude Workspace Picker" to get started.'
+    } else {
+        Write-Host 'Done.'
+    }
 }
 catch {
     Write-Host ''

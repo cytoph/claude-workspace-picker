@@ -21,15 +21,22 @@ internal static partial class ProfileInstaller
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    public static void Run()
+    public static bool Run()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Console.WriteLine("--install-profile is only supported on Windows.");
+
+            return false;
+        }
+
         string? settingsPath = FindSettingsPath();
 
         if (settingsPath is null)
         {
             Console.WriteLine("Windows Terminal settings.json not found. Is Windows Terminal installed?");
 
-            return;
+            return false;
         }
 
         try
@@ -45,14 +52,14 @@ internal static partial class ProfileInstaller
             {
                 Console.WriteLine("Unexpected settings.json structure - could not find profiles list.");
 
-                return;
+                return false;
             }
 
             if (Environment.ProcessPath is not { } exePath)
             {
                 Console.WriteLine("Failed to install profile: could not determine exe path.");
 
-                return;
+                return false;
             }
 
             foreach (JsonNode? node in profileList)
@@ -66,7 +73,7 @@ internal static partial class ProfileInstaller
                 {
                     Console.WriteLine("Profile already installed.");
 
-                    return;
+                    return true;
                 }
 
                 entry["commandline"] = JsonValue.Create(exePath);
@@ -80,7 +87,7 @@ internal static partial class ProfileInstaller
 
                 Console.WriteLine("Profile updated.");
 
-                return;
+                return true;
             }
 
             JsonObject profile = new()
@@ -97,10 +104,14 @@ internal static partial class ProfileInstaller
             WriteSettings(settingsPath, root!);
 
             Console.WriteLine("Profile installed.");
+
+            return true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Failed to install profile: {ex.Message}");
+
+            return false;
         }
     }
 

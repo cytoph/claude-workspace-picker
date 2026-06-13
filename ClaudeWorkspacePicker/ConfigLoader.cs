@@ -1,4 +1,5 @@
 using System.Text.Json;
+using ClaudeWorkspacePicker.Helpers;
 using ClaudeWorkspacePicker.Models;
 using Spectre.Console;
 
@@ -139,7 +140,7 @@ static class ConfigLoader
                     continue;
                 }
 
-                string resolvedPath = Environment.ExpandEnvironmentVariables(dirConfig.Path);
+                string resolvedPath = PathHelper.ExpandPath(dirConfig.Path);
 
                 if (!Directory.Exists(resolvedPath))
                 {

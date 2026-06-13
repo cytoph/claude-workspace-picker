@@ -37,8 +37,20 @@ jobs:
           git tag "${{ inputs.tag }}"
           git push origin "${{ inputs.tag }}"
 
-      - name: Build artifact
-        run: dotnet publish ClaudeWorkspacePicker/ClaudeWorkspacePicker.csproj -r win-x64 --self-contained -p:PublishSingleFile=true -c Release
+      - name: Build all artifacts
+        run: |
+          mkdir -p artifacts
+          for rid in win-x64 win-arm64 linux-x64 linux-arm64 osx-x64 osx-arm64; do
+            dotnet publish ClaudeWorkspacePicker/ClaudeWorkspacePicker.csproj \
+              -r $rid --self-contained -p:PublishSingleFile=true -c Release
+            if [[ $rid == win-* ]]; then
+              cp "ClaudeWorkspacePicker/bin/Release/net10.0/$rid/publish/ClaudeWorkspacePicker.exe" \
+                 "artifacts/ClaudeWorkspacePicker-$rid.exe"
+            else
+              cp "ClaudeWorkspacePicker/bin/Release/net10.0/$rid/publish/ClaudeWorkspacePicker" \
+                 "artifacts/ClaudeWorkspacePicker-$rid"
+            fi
+          done
 
       - name: Create release
         if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.tag != '')
@@ -46,11 +58,11 @@ jobs:
         with:
           tag_name: ${{ inputs.tag || github.ref_name }}
           generate_release_notes: true
-          files: ClaudeWorkspacePicker/bin/Release/net10.0/win-x64/publish/ClaudeWorkspacePicker.exe
+          files: artifacts/ClaudeWorkspacePicker-*
 
       - name: Upload build artifact
         if: github.event_name == 'workflow_dispatch' && inputs.tag == ''
         uses: actions/upload-artifact@v7
         with:
           name: ClaudeWorkspacePicker
-          path: ClaudeWorkspacePicker/bin/Release/net10.0/win-x64/publish/ClaudeWorkspacePicker.exe
+          path: artifacts/

@@ -1,41 +1,48 @@
-using System.Diagnostics;
 using ClaudeWorkspacePicker;
 using ClaudeWorkspacePicker.Models;
 using ClaudeWorkspacePicker.Ui;
 using Spectre.Tui.App;
+using System.Diagnostics;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
 
 if (args.Contains("--install-profile"))
 {
-    ProfileInstaller.Run();
-    return;
+    bool success = ProfileInstaller.Run();
+
+    Environment.Exit(success ? 0 : 1);
 }
 
-string applicationName = "ClaudeWorkspacePicker";
-string settingsFileName = "settings.jsonc";
+const string ApplicationName = "ClaudeWorkspacePicker";
+const string SettingsFileName = "settings.jsonc";
 
-string localPath = Path.Combine(AppContext.BaseDirectory, settingsFileName);
-string appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), applicationName, settingsFileName);
+string settingsPath = Path.Combine(AppContext.BaseDirectory, SettingsFileName);
 
-string settingsPath;
+if (!File.Exists(settingsPath))
+{
+    Stream? embeddedSettings = typeof(Program).Assembly.GetManifestResourceStream($"{ApplicationName}.{SettingsFileName}");
 
-if (File.Exists(localPath))
-{
-    settingsPath = localPath;
-}
-else if (File.Exists(appDataPath))
-{
-    settingsPath = appDataPath;
-}
-else
-{
-    Directory.CreateDirectory(Path.GetDirectoryName(appDataPath)!);
-    using Stream src = typeof(Program).Assembly.GetManifestResourceStream($"{applicationName}.settings.jsonc")!;
-    using var dst = File.Create(appDataPath);
-    await src.CopyToAsync(dst);
-    settingsPath = appDataPath;
+    if (embeddedSettings is null)
+    {
+        Console.Error.WriteLine("Internal error: embedded settings.jsonc resource not found.");
+
+        return;
+    }
+
+    try
+    {
+        using Stream src = embeddedSettings;
+        using FileStream dst = File.Create(settingsPath);
+        await src.CopyToAsync(dst);
+    }
+    catch (IOException ex)
+    {
+        Console.Error.WriteLine($"Could not write default settings to {settingsPath}: {ex.Message}");
+        Console.Error.WriteLine("Move the binary to a writable directory and try again.");
+
+        return;
+    }
 }
 
 Result<AppState> result = ConfigLoader.Load(settingsPath);
@@ -45,6 +52,7 @@ Application application = Application.Create();
 if (!result.TryGetValue(out AppState? appState))
 {
     await application.RunAsync(new ErrorScreen(result.Errors, settingsPath));
+
     return;
 }
 
@@ -58,12 +66,10 @@ Environment.CurrentDirectory = selectedEntry.Path;
 
 string claudeCommand = string.IsNullOrWhiteSpace(selectedEntry.Arguments) ? "claude" : $"claude {selectedEntry.Arguments}";
 
-using Process process = new()
-{
-    StartInfo = new ProcessStartInfo("cmd.exe", $"/c {claudeCommand}")
-    {
-        UseShellExecute = false,
-    }
-};
+(string shell, string shellArgs) = OperatingSystem.IsWindows()
+    ? ("cmd.exe", $"/c {claudeCommand}")
+    : ("sh", $"-c '{claudeCommand.Replace("'", "'\\''")}'");
+
+using Process process = new() { StartInfo = new ProcessStartInfo(shell, shellArgs) { UseShellExecute = false } };
 
 process.Start();
