@@ -46,20 +46,31 @@ try {
         "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json",
         "$env:LOCALAPPDATA\Microsoft\Windows Terminal\settings.json"
     )
-    $wtFound = ($wtPaths | Where-Object { Test-Path $_ }).Count -gt 0
+    $wtSettingsPath = $wtPaths | Where-Object { Test-Path $_ } | Select-Object -First 1
+    $wtFound = $null -ne $wtSettingsPath
     $profileInstalled = $false
 
     if ($wtFound) {
-        $response = Read-Host '  [5/5] Windows Terminal found. Install launcher profile? [Y/n]'
-        if ($response -eq '' -or $response -match '^[Yy]') {
+        $profileAlreadyInstalled = Select-String -LiteralPath $wtSettingsPath -Pattern '3bd7de81-a386-40fe-b2e9-59692388ee7a' -Quiet
+        if ($profileAlreadyInstalled) {
             & $exePath --install-profile
             if ($LASTEXITCODE -eq 0) {
                 $profileInstalled = $true
             } else {
-                Write-Host '  [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.' -ForegroundColor Yellow
+                Write-Host '  [5/5] Warning: profile update failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.' -ForegroundColor Yellow
             }
         } else {
-            Write-Host '  [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.'
+            $response = Read-Host '  [5/5] Windows Terminal found. Install launcher profile? [Y/n]'
+            if ($response -eq '' -or $response -match '^[Yy]') {
+                & $exePath --install-profile
+                if ($LASTEXITCODE -eq 0) {
+                    $profileInstalled = $true
+                } else {
+                    Write-Host '  [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.' -ForegroundColor Yellow
+                }
+            } else {
+                Write-Host '  [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.'
+            }
         }
     } else {
         Write-Host '  [5/5] Windows Terminal not found - skipped. Run ClaudeWorkspacePicker.exe --install-profile after installing Windows Terminal.'

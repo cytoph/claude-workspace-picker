@@ -57,23 +57,45 @@ if not exist "%SETTINGS_PATH%" (
 
 :: Step 5 - optionally install Windows Terminal profile
 set WT_FOUND=0
-if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" set WT_FOUND=1
-if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json" set WT_FOUND=1
-if exist "%LOCALAPPDATA%\Microsoft\Windows Terminal\settings.json" set WT_FOUND=1
+set WT_SETTINGS_PATH=
+if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" (
+    set WT_FOUND=1
+    if "!WT_SETTINGS_PATH!"=="" set "WT_SETTINGS_PATH=%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+)
+if exist "%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json" (
+    set WT_FOUND=1
+    if "!WT_SETTINGS_PATH!"=="" set "WT_SETTINGS_PATH=%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json"
+)
+if exist "%LOCALAPPDATA%\Microsoft\Windows Terminal\settings.json" (
+    set WT_FOUND=1
+    if "!WT_SETTINGS_PATH!"=="" set "WT_SETTINGS_PATH=%LOCALAPPDATA%\Microsoft\Windows Terminal\settings.json"
+)
 
 set PROFILE_INSTALLED=0
 if "%WT_FOUND%"=="1" (
-    set /p INSTALL_PROFILE=  [5/5] Windows Terminal found. Install launcher profile? [Y/n]:
-    if "!INSTALL_PROFILE!"=="" set INSTALL_PROFILE=Y
-    if /i "!INSTALL_PROFILE!"=="Y" (
+    set PROFILE_ALREADY_INSTALLED=0
+    findstr /c:"3bd7de81-a386-40fe-b2e9-59692388ee7a" "!WT_SETTINGS_PATH!" >nul 2>&1
+    if !ERRORLEVEL!==0 set PROFILE_ALREADY_INSTALLED=1
+    if "!PROFILE_ALREADY_INSTALLED!"=="1" (
         "%EXE_PATH%" --install-profile
         if !ERRORLEVEL!==0 (
             set PROFILE_INSTALLED=1
         ) else (
-            echo   [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.
+            echo   [5/5] Warning: profile update failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.
         )
     ) else (
-        echo   [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.
+        set /p INSTALL_PROFILE=  [5/5] Windows Terminal found. Install launcher profile? [Y/n]:
+        if "!INSTALL_PROFILE!"=="" set INSTALL_PROFILE=Y
+        if /i "!INSTALL_PROFILE!"=="Y" (
+            "%EXE_PATH%" --install-profile
+            if !ERRORLEVEL!==0 (
+                set PROFILE_INSTALLED=1
+            ) else (
+                echo   [5/5] Warning: profile installation failed. Run ClaudeWorkspacePicker.exe --install-profile to retry.
+            )
+        ) else (
+            echo   [5/5] Skipped. Run ClaudeWorkspacePicker.exe --install-profile to add the profile later.
+        )
     )
 ) else (
     echo   [5/5] Windows Terminal not found - skipped. Run ClaudeWorkspacePicker.exe --install-profile after installing Windows Terminal.
