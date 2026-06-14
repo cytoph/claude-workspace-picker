@@ -77,6 +77,7 @@ if "%WT_FOUND%"=="1" (
     findstr /c:"3bd7de81-a386-40fe-b2e9-59692388ee7a" "!WT_SETTINGS_PATH!" >nul 2>&1
     if !ERRORLEVEL!==0 set PROFILE_ALREADY_INSTALLED=1
     if "!PROFILE_ALREADY_INSTALLED!"=="1" (
+        echo   [5/5] Windows Terminal profile already installed. Updating now...
         "%EXE_PATH%" --install-profile
         if !ERRORLEVEL!==0 (
             set PROFILE_INSTALLED=1

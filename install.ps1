@@ -53,6 +53,7 @@ try {
     if ($wtFound) {
         $profileAlreadyInstalled = Select-String -LiteralPath $wtSettingsPath -Pattern '3bd7de81-a386-40fe-b2e9-59692388ee7a' -Quiet
         if ($profileAlreadyInstalled) {
+            Write-Host '  [5/5] Windows Terminal profile already installed. Updating now...'
             & $exePath --install-profile
             if ($LASTEXITCODE -eq 0) {
                 $profileInstalled = $true
