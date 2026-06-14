@@ -2,6 +2,9 @@
     <Folder Name="/Solution Items/">
         <File Path=".editorconfig" />
         <File Path=".gitignore" />
+        <File Path="install.cmd" />
+        <File Path="install.ps1" />
+        <File Path="install.sh" />
         <File Path="LICENSE" />
         <File Path="README.md" />
     </Folder>
